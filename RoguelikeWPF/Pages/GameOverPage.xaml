@@ -1,0 +1,12 @@
+﻿<Page x:Class="RoguelikeWPF.Pages.GameOverPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Game Over">
+
+    <Grid Background="#FF2C2C2C">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="Вы проиграли!" FontSize="50" Foreground="Red" HorizontalAlignment="Center"/>
+            <Button Content="Начать заново" FontSize="24" Padding="40,15" Margin="0,60,0,0" Click="Restart_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
