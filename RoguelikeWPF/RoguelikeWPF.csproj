@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\ArmorFactory.cs" />
+    <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\MonsterFactory.cs" />
+    <Compile Include="Models\WeaponFactory.cs" />
     <Compile Include="Pages\GameOverPage.xaml.cs">
       <DependentUpon>GameOverPage.xaml</DependentUpon>
     </Compile>

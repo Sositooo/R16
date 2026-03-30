@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using RoguelikeWPF.Services;
 
@@ -11,78 +12,111 @@ namespace RoguelikeWPF.Pages
     {
         private readonly GameManager _game;
 
+
         public GamePage(GameManager game)
         {
             InitializeComponent();
             _game = game;
             UpdateUI();
+
         }
 
+        private void UpdateInventory()
+        {
+            spInventory.Children.Clear();
 
+            // Оружие
+            var weaponText = new TextBlock
+            {
+                Text = $"Оружие: {_game.Player.CurrentWeapon.Name} (+{_game.Player.CurrentWeapon.Attack})",
+                FontSize = 16,
+                Margin = new Thickness(5, 2, 5, 2),
+                Foreground = new SolidColorBrush(Colors.Yellow)
+            };
+            spInventory.Children.Add(weaponText);
+
+            // Броня
+            var armorText = new TextBlock
+            {
+                Text = $"Броня: {_game.Player.CurrentArmor.Name} (+{_game.Player.CurrentArmor.Defense})",
+                FontSize = 16,
+                Margin = new Thickness(5, 2, 5, 2),
+                Foreground = new SolidColorBrush(Colors.Cyan)
+            };
+            spInventory.Children.Add(armorText);
+        }
         private void UpdateUI()
         {
-            // Обновление верхней панели
+            // === Обновление верхней панели ===
             tbFloor.Text = _game.Player.Floor.ToString();
             pbHealth.Value = (double)_game.Player.HP / _game.Player.MaxHP * 100;
             tbHP.Text = $"{_game.Player.HP}/{_game.Player.MaxHP}";
             tbWeapon.Text = _game.Player.CurrentWeapon.Name;
             tbArmor.Text = _game.Player.CurrentArmor.Name;
 
-
-            // Загрузка картинки комнаты
+            // === Загрузка картинки комнаты ===
             if (!string.IsNullOrEmpty(_game.CurrentRoomImage))
             {
                 try
                 {
-                    var uri = new Uri(_game.CurrentRoomImage, UriKind.RelativeOrAbsolute);
-                    imgRoom.Source = new BitmapImage(uri);
+                    imgRoom.Source = new BitmapImage(new Uri(_game.CurrentRoomImage, UriKind.RelativeOrAbsolute));
                 }
-                catch (Exception ex)
+                catch
                 {
                     imgRoom.Source = null;
-                
                 }
             }
 
-            // Лог — показываем только последние строки
+            // === Обновление лога (последние 15 строк) ===
             lbLog.Items.Clear();
-            int start = Math.Max(0, _game.Log.Count - 15);
-            for (int i = start; i < _game.Log.Count; i++)
+            int startIndex = Math.Max(0, _game.Log.Count - 15);
+            for (int i = startIndex; i < _game.Log.Count; i++)
             {
                 lbLog.Items.Add(_game.Log[i]);
             }
 
+            // === Очистка кнопок и инвентаря ===
             spActions.Children.Clear();
-            spInventory.Children.Clear();
+            spInventory.Children.Clear();   // если используешь StackPanel
 
+            // === Логика кнопок ===
             if (_game.IsFight)
             {
-                // бой — кнопки атака/защита
+                // Бой — кнопки Атаковать / Защищаться
                 var btnAttack = new Button { Content = "Атаковать", Width = 180, Height = 60, FontSize = 18, Margin = new Thickness(12) };
                 var btnDefend = new Button { Content = "Защищаться", Width = 180, Height = 60, FontSize = 18, Margin = new Thickness(12) };
                 btnAttack.Click += (s, e) => PlayerAct(true);
                 btnDefend.Click += (s, e) => PlayerAct(false);
+
                 spActions.Children.Add(btnAttack);
                 spActions.Children.Add(btnDefend);
             }
             else if (_game.PendingItem != null)
             {
-                // есть предмет на выбор
+                // Выпал предмет из сундука
                 var btnTake = new Button { Content = "Взять", Width = 180, Height = 60, FontSize = 18, Margin = new Thickness(12) };
                 var btnDiscard = new Button { Content = "Выбросить", Width = 180, Height = 60, FontSize = 18, Margin = new Thickness(12) };
+
                 btnTake.Click += (s, e) => { _game.TakePendingItem(true); UpdateUI(); };
                 btnDiscard.Click += (s, e) => { _game.TakePendingItem(false); UpdateUI(); };
+
                 spActions.Children.Add(btnTake);
                 spActions.Children.Add(btnDiscard);
             }
             else
             {
-                // обычный переход дальше
+                // Обычный переход на следующий этаж
                 var nextBtn = new Button { Content = "Далее →", Width = 250, Height = 65, FontSize = 20 };
                 nextBtn.Click += (s, e) => { _game.NewRoom(); UpdateUI(); };
                 spActions.Children.Add(nextBtn);
             }
+
+            // === Обновление инвентаря ===
+            UpdateInventory();
         }
+
+
+
 
         private void PlayerAct(bool isAttack)
         {
@@ -92,5 +126,8 @@ namespace RoguelikeWPF.Pages
             if (_game.Player.IsDead)
                 NavigationService.Navigate(new GameOverPage());
         }
+
     }
-}
+
+
+    }

@@ -26,13 +26,14 @@ namespace RoguelikeWPF.Services
             NewRoom();
         }
 
+        // Обнови NewRoom() — используй новую фабрику
         public void NewRoom()
         {
             Player.NextFloor();
             Log.Add($"=== Этап {Player.Floor} ===");
 
             bool isBoss = Player.Floor % 10 == 0;
-            bool isChest = _rnd.Next(2) == 0 && !isBoss;     // 50% шанс
+            bool isChest = _rnd.Next(2) == 0 && !isBoss;
 
             if (isChest)
             {
@@ -43,7 +44,7 @@ namespace RoguelikeWPF.Services
             }
             else
             {
-                CurrentEnemies = EnemyFactory.Create(isBoss);
+                CurrentEnemies = MonsterFactory.CreateEnemies(isBoss);
                 CurrentRoomImage = isBoss
                     ? "pack://application:,,,/Assets/boss.png"
                     : GetEnemyImage(CurrentEnemies[0]);
@@ -61,6 +62,7 @@ namespace RoguelikeWPF.Services
             return "pack://application:,,,/Assets/boss.png";
         }
 
+        // Замени HandleChest()
         private void HandleChest()
         {
             int type = _rnd.Next(3);
@@ -73,17 +75,17 @@ namespace RoguelikeWPF.Services
             }
             else if (type == 1) // оружие
             {
-                var newWeapon = new Weapon($"Новый меч", _rnd.Next(12, 28));
-                PendingItem = newWeapon;
+                var weapon = WeaponFactory.Create();
+                PendingItem = weapon;
                 IsPendingItemWeapon = true;
-                Log.Add($"Оружие: {newWeapon.Name} (атака {newWeapon.Attack}). Взять?");
+                Log.Add($"Предлагается: {weapon.Name} (атака {weapon.Attack}). Взять?");
             }
             else // броня
             {
-                var newArmor = new Armor($"Новая броня", _rnd.Next(6, 20));
-                PendingItem = newArmor;
+                var armor = ArmorFactory.Create();
+                PendingItem = armor;
                 IsPendingItemWeapon = false;
-                Log.Add($"Броня: {newArmor.Name} (защита {newArmor.Defense}). Взять?");
+                Log.Add($"Предлагается: {armor.Name} (защита {armor.Defense}). Взять?");
             }
         }
 
