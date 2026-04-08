@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace RoguelikeWPF.Models
 {
-    // Armor.cs
     public class Armor
     {
         public string Name { get; }
         public int Defense { get; }
-        public Armor(string name, int defense) { Name = name; Defense = defense; }
+        public string ImagePath { get; } = "/Assets/armor.png";  
+
+        public Armor(string name, int defense)
+        {
+            Name = name;
+            Defense = defense;
+        }
     }
 }

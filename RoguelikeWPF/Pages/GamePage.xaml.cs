@@ -26,24 +26,28 @@ namespace RoguelikeWPF.Pages
             spInventory.Children.Clear();
 
             // Оружие
-            var weaponText = new TextBlock
+            var weaponPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 5) };
+            weaponPanel.Children.Add(new Image { Width = 40, Height = 40, Source = new BitmapImage(new Uri("/Assets/weapon.png", UriKind.Relative)), Margin = new Thickness(0, 0, 10, 0) });
+            weaponPanel.Children.Add(new TextBlock
             {
                 Text = $"Оружие: {_game.Player.CurrentWeapon.Name} (+{_game.Player.CurrentWeapon.Attack})",
                 FontSize = 16,
-                Margin = new Thickness(5, 2, 5, 2),
+                VerticalAlignment = VerticalAlignment.Center,
                 Foreground = new SolidColorBrush(Colors.Yellow)
-            };
-            spInventory.Children.Add(weaponText);
+            });
+            spInventory.Children.Add(weaponPanel);
 
             // Броня
-            var armorText = new TextBlock
+            var armorPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 5, 0, 5) };
+            armorPanel.Children.Add(new Image { Width = 40, Height = 40, Source = new BitmapImage(new Uri("/Assets/armor.png", UriKind.Relative)), Margin = new Thickness(0, 0, 10, 0) });
+            armorPanel.Children.Add(new TextBlock
             {
                 Text = $"Броня: {_game.Player.CurrentArmor.Name} (+{_game.Player.CurrentArmor.Defense})",
                 FontSize = 16,
-                Margin = new Thickness(5, 2, 5, 2),
+                VerticalAlignment = VerticalAlignment.Center,
                 Foreground = new SolidColorBrush(Colors.Cyan)
-            };
-            spInventory.Children.Add(armorText);
+            });
+            spInventory.Children.Add(armorPanel);
         }
         private void UpdateUI()
         {

@@ -10,19 +10,12 @@ namespace RoguelikeWPF.Models
     {
         public string Name { get; }
         public int Attack { get; }
-        public string ImagePath { get; } = "/Assets/weapon.png";
+        public string ImagePath { get; } = "/Assets/weapon.png";  
 
         public Weapon(string name, int attack)
         {
             Name = name;
             Attack = attack;
-        }
-
-        public Weapon(string name, int attack, string imagePath)
-        {
-            Name = name;
-            Attack = attack;
-            ImagePath = imagePath;
         }
     }
 }

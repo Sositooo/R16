@@ -17,7 +17,7 @@ namespace RoguelikeWPF.Models
             string name = names[_rnd.Next(names.Length)];
             int attack = _rnd.Next(13, 29);
 
-            return new Weapon(name, attack);   // ← только 2 параметра!
+            return new Weapon($"{name} +{attack}", attack);
         }
     }
 }
